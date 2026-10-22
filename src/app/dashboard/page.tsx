@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { listAccounts } from "@/lib/accounts";
 import { requireUser } from "@/lib/auth/session";
-import { COUNTRIES, getAccountType, getCountry, isLiability } from "@/lib/countries";
+import { COUNTRIES, getAccountType, getCountry, isLiability, SUPPORTED_CURRENCIES } from "@/lib/countries";
 import { getRates } from "@/lib/fx";
 import { computeTotals, convert, formatMoney } from "@/lib/money";
+import { monthOf, saveSnapshot } from "@/lib/snapshots";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +15,13 @@ export default async function Dashboard() {
   const primary = currencies[0] ?? "USD";
   const totals = computeTotals(accounts, currencies.length ? currencies : ["USD"], fx.rates);
   const grossAssets = totals.assets[primary] || 1;
+
+  // Keep this month's history point current. Skipped while any account can't be converted,
+  // so a missing FX rate never records a misleadingly low total.
+  if (accounts.length && totals.unconverted.length === 0) {
+    const all = computeTotals(accounts, SUPPORTED_CURRENCIES.filter((c) => fx.rates[c]), fx.rates);
+    await saveSnapshot(user, monthOf(new Date()), "auto", { net: all.net, byCountry: all.byCountry, rates: fx.rates });
+  }
 
   return (
     <>

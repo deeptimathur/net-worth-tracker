@@ -36,7 +36,15 @@ export const IN: CountryModule = {
     { name: "Kotak Securities", match: ["KOTAK SECURITIES"] },
     { name: "Kuvera", match: ["KUVERA"] },
   ],
-  inflationIndex: "India CPI (Combined)",
+  inflation: {
+    index: "India CPI (Combined)",
+    source: "MoSPI CPI (Combined) via World Bank FP.CPI.TOTL.ZG, calendar-year average",
+    annual: {
+      2010: 12.0, 2011: 8.9, 2012: 9.5, 2013: 10.0, 2014: 6.7, 2015: 4.9, 2016: 4.9, 2017: 3.3,
+      2018: 3.9, 2019: 3.7, 2020: 6.6, 2021: 5.1, 2022: 6.7, 2023: 5.6, 2024: 5.0, 2025: 2.2, 2026: 4.0,
+    },
+    estimatedFrom: 2025,
+  },
   importers: [
     {
       id: "cas",

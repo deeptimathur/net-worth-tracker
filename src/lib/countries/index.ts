@@ -2,7 +2,7 @@ import { IN } from "./in";
 import { US } from "./us";
 import type { AccountType, CountryModule } from "./types";
 
-export type { AccountType, CountryModule } from "./types";
+export type { AccountType, CountryModule, InflationSeries } from "./types";
 
 /** Register new countries here. */
 export const COUNTRIES: CountryModule[] = [US, IN];
@@ -28,4 +28,9 @@ export const SUPPORTED_CURRENCIES: string[] = [...new Set(COUNTRIES.map((c) => c
 export function matchInstitution(country: string, text: string): string | undefined {
   const upper = text.toUpperCase();
   return getCountry(country)?.institutions.find((i) => i.match.some((m) => upper.includes(m)))?.name;
+}
+
+/** The country whose inflation applies to money held in a currency (first registered wins). */
+export function countryForCurrency(currency: string): CountryModule | undefined {
+  return COUNTRIES.find((c) => c.currency === currency);
 }

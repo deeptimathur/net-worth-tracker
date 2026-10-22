@@ -23,6 +23,16 @@ export interface ImporterInfo {
   href: string;
 }
 
+export interface InflationSeries {
+  /** Name of the index, e.g. "US CPI-U". */
+  index: string;
+  source: string;
+  /** Calendar-year average inflation, in percent. */
+  annual: Record<number, number>;
+  /** Years from this one on are estimates (forecasts or partial-year figures). */
+  estimatedFrom: number;
+}
+
 export interface CountryModule {
   /** ISO 3166-1 alpha-2. */
   code: string;
@@ -34,7 +44,7 @@ export interface CountryModule {
   accountTypes: AccountType[];
   /** Suggestions for the institution field, plus aliases importers use to name accounts. */
   institutions: InstitutionAlias[];
-  /** Consumer inflation index used for "growth vs inflation" (later milestone). */
-  inflationIndex: string;
+  /** Consumer inflation used to judge real growth of money held in this country's currency. */
+  inflation: InflationSeries;
   importers: ImporterInfo[];
 }
