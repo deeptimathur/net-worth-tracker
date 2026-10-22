@@ -22,8 +22,8 @@ Before a public launch: login rate limiting, email verification and password res
 
 ## Milestones
 
-1. **MVP (this PR):** signup/login, manual accounts for US and India, totals in USD and INR with daily FX, by-country breakdown, CDSL/NSDL CAS upload with review.
-2. **History:** monthly snapshots, growth chart, growth vs US CPI / India CPI (port from the personal tracker), user-chosen display currencies.
+1. **MVP (done, #1):** signup/login, manual accounts for US and India, totals in USD and INR with daily FX, by-country breakdown, CDSL/NSDL CAS upload with review.
+2. **History (done):** a monthly snapshot saved from live balances, past months entered by hand, and a growth chart per display currency against that country's CPI (US CPI-U, India CPI Combined; recent years flagged as estimates in the country modules). Still to do: user-chosen display currencies.
 3. **Hardening for public use:** rate limiting, email verification, password reset, Google sign-in, data export and account deletion, audit log.
 4. **US linking (Plaid):** Plaid Link for banks and brokerages (Investments + Balance). Costs: free in Sandbox and limited Development; Production needs Plaid approval and is billed per connected account per month. Access tokens stored encrypted with the user's data key.
 5. **India linking (Account Aggregator):** consent-based bank and investment data via RBI's AA framework. Needs either our own FIU registration (regulated entity) or a partner TSP such as Setu, Finvu or OneMoney. Until then: CAS for demat/MF, bank statement PDF import, manual entry.

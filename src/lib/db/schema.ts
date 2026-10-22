@@ -1,4 +1,4 @@
-import { date, index, numeric, pgTable, primaryKey, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { date, index, numeric, pgTable, primaryKey, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -58,4 +58,23 @@ export const fxRates = pgTable(
     fetchedAt: timestamp("fetched_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [primaryKey({ columns: [t.day, t.quote] })],
+);
+
+/** One net worth reading per user per month. */
+export const snapshots = pgTable(
+  "snapshots",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    /** First day of the month (YYYY-MM-01). */
+    month: date("month").notNull(),
+    /** "auto" (recorded from live balances) or "entered" (typed in for a past month). */
+    source: text("source").notNull(),
+    /** Encrypted SnapshotSecret JSON. */
+    data: text("data").notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex("snapshots_user_month_idx").on(t.userId, t.month)],
 );
