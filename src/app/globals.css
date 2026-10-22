@@ -45,6 +45,7 @@ header.top .brand { font-weight: 650; text-decoration: none; color: var(--text);
 header.top nav { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
 header.top nav a { text-decoration: none; color: var(--muted); }
 header.top nav a:hover { color: var(--text); }
+header.top nav a.button, header.top nav a.button:hover { color: var(--accent-text); }
 h1 { font-size: 1.6rem; margin: 0 0 4px; }
 h2 { font-size: 1.1rem; margin: 28px 0 10px; }
 .muted { color: var(--muted); }
@@ -80,3 +81,6 @@ td.num, th.num { text-align: right; white-space: nowrap; }
 .pill { font-size: 0.75rem; border: 1px solid var(--border); border-radius: 999px; padding: 1px 8px; color: var(--muted); }
 .bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
 .bar > span { display: block; height: 100%; background: var(--accent); }
+.button.google { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
+.divider { display: flex; align-items: center; gap: 10px; margin: 14px 0; }
+.divider::before, .divider::after { content: ""; flex: 1; border-top: 1px solid var(--border); }

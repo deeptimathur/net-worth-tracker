@@ -52,7 +52,9 @@ export async function login(_: FormState, form: FormData): Promise<FormState> {
     .from(schema.users)
     .where(eq(schema.users.email, parsed.data.email));
   const ok = await verifyPassword(parsed.data.password, user?.passwordHash ?? (await DUMMY_HASH));
-  if (!user || !ok) return fail;
+  if (!user?.passwordHash || !ok) {
+    return user && !user.passwordHash ? { error: "This account uses Sign in with Google." } : fail;
+  }
   await createSession(user.id);
   redirect("/dashboard");
 }
