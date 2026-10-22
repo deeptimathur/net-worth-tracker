@@ -83,10 +83,14 @@ function toRow(user: SessionUser, input: AccountInput) {
   };
 }
 
-export async function createAccount(user: SessionUser, input: AccountInput): Promise<string> {
+export async function createAccount(
+  user: SessionUser,
+  input: AccountInput,
+  link: { externalId?: string; plaidItemId?: string } = {},
+): Promise<string> {
   const [row] = await getDb()
     .insert(schema.accounts)
-    .values({ ...toRow(user, input), userId: user.id })
+    .values({ ...toRow(user, input), ...link, userId: user.id })
     .returning({ id: schema.accounts.id });
   return row.id;
 }

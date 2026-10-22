@@ -3,7 +3,10 @@ import { date, index, numeric, pgTable, primaryKey, text, timestamp, uniqueIndex
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
   email: text("email").notNull().unique(),
-  passwordHash: text("password_hash").notNull(),
+  /** Null for accounts that only sign in with Google. */
+  passwordHash: text("password_hash"),
+  /** Google account id ("sub"), once the user has signed in with Google. */
+  googleSub: text("google_sub").unique(),
   name: text("name").notNull().default(""),
   /** This user's data key, wrapped under APP_ENCRYPTION_KEY. */
   wrappedDek: text("wrapped_dek").notNull(),
@@ -26,6 +29,28 @@ export const sessions = pgTable(
   (t) => [index("sessions_user_idx").on(t.userId)],
 );
 
+/** A Plaid connection to one institution. */
+export const plaidItems = pgTable(
+  "plaid_items",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    itemId: text("item_id").notNull().unique(),
+    /** "bank" (depository + credit) or "investments". */
+    kind: text("kind").notNull(),
+    /** Encrypted PlaidItemSecret JSON (access token, institution name). */
+    data: text("data").notNull(),
+    /** "ok", "login_required" or "error". */
+    status: text("status").notNull().default("ok"),
+    lastError: text("last_error"),
+    lastSyncedAt: timestamp("last_synced_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("plaid_items_user_idx").on(t.userId)],
+);
+
 export const accounts = pgTable(
   "accounts",
   {
@@ -41,10 +66,13 @@ export const accounts = pgTable(
     asOf: date("as_of"),
     /** "manual" or an importer id such as "cas". */
     source: text("source").notNull().default("manual"),
+    /** Provider's account id (e.g. Plaid account_id) for linked accounts. */
+    externalId: text("external_id"),
+    plaidItemId: uuid("plaid_item_id").references(() => plaidItems.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
-  (t) => [index("accounts_user_idx").on(t.userId)],
+  (t) => [index("accounts_user_idx").on(t.userId), uniqueIndex("accounts_user_external_idx").on(t.userId, t.externalId)],
 );
 
 /** Shared daily FX reference rates (not user data). Units of `quote` per 1 USD. */

@@ -24,6 +24,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 <Link href="/dashboard">Dashboard</Link>
                 <Link href="/history">History</Link>
                 <Link href="/accounts/new">Add account</Link>
+                <Link href="/connections">Link accounts</Link>
                 <Link href="/import/cas">Import CAS</Link>
                 <form action={logout}>
                   <button className="link">Log out</button>

@@ -13,7 +13,8 @@ export default async function Home() {
         total in every currency you care about with daily exchange rates.
       </p>
       <ul>
-        <li>Add accounts by hand, or import Indian holdings from your CDSL / NSDL CAS statement.</li>
+        <li>Link US banks, cards and brokerages securely through Plaid.</li>
+        <li>Import Indian demat and mutual fund holdings from your CDSL / NSDL CAS statement, or add accounts by hand.</li>
         <li>Balances are encrypted with a key unique to you before they're stored.</li>
         <li>Statement PDFs and their passwords are read in memory and never saved.</li>
       </ul>
